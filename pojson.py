@@ -168,7 +168,7 @@ def arguments():
     parser.add_argument('--oneliner', action='store_true', dest='ONELINER', help="Convert generated payload to one-liner")
     parser.add_argument('--bookmarklet', action='store_true', dest='BOOKMARKLET', help="Convert generated payload to a bookmarklet")
     parser.add_argument('--handler', action='store_true', dest='HANDLER', help="Start handler after payload generation")
-    parser.add_argument('--replace-http', action='store_true', dest='REPLACE_HTTP', help="Replace 'http://' with '//'")
+    parser.add_argument('--replace-http', action='store_true', dest='REPLACE_HTTP', help="Replace 'http[s]://' with a random substitute")
     #parser.add_argument('--replacei-chars', action='store', choices=['html', 'octal', 'url', 'iso', 'hex', 'numeric'], dest='REPLACE', 
     #                    help="Replace all special characters with their equivalents of selected type")
     return parser.parse_args()
@@ -216,6 +216,7 @@ def main():
         #Not finished yet, but it should insert NULLs on random positions.
 
     if res.REPLACE_HTTP:
+        substitute = random.choice(["//", "/\\\\", "\\\\"])
         js_code = js_code.replace("http://", "//") #Sometimes http[s] can be omitted in payloads
         js_code = js_code.replace("https://", "//")
 
