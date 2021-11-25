@@ -165,6 +165,7 @@ def arguments():
     wrapping_group.add_argument('--tag-random', action='store_true', dest='TAG_RANDOM', help="Wrap payload with random <script> tags")
     wrapping_group.add_argument('--polyglot', action='store_true', dest='POLYGLOT', help="Wrap payload with polyglot wrapper")
     wrapping_group.add_argument('--cookie', action='store_true', dest='COOKIE', help="Use cookie shortener to reduce payload's size and detection probability")
+    wrapping_group.add_argument('--confirm', action='store_true', dest='CONFIRM', help="Replace alert() popups with less detectable confirm()")
     parser.add_argument('--oneliner', action='store_true', dest='ONELINER', help="Convert generated payload to one-liner")
     parser.add_argument('--bookmarklet', action='store_true', dest='BOOKMARKLET', help="Convert generated payload to a bookmarklet")
     parser.add_argument('--handler', action='store_true', dest='HANDLER', help="Start handler after payload generation")
@@ -242,6 +243,9 @@ def main():
         script_tag = "script"
         script_tag = "".join(random.choice([c.upper(), c]) for c in script_tag )
         js_code = f"<{script_tag}>{js_code}</{script_tag}>"
+
+    if res.CONFIRM:
+        js_code = js_code.replace("alert", "confirm")
 
     if res.CLIP: #Copies payload to system clipboard (can be pasted with Ctrl-V)
         pyperclip.copy(js_code)
