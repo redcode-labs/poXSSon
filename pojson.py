@@ -1,4 +1,4 @@
-#!/usr/bin/python3.7
+#!/usr/bin/python3
 import argparse
 from huepy import *
 import sys
@@ -56,7 +56,8 @@ def list_payloads():
         if ('init' in p or '.pyc' in p):
             pass #We don't want temporary files to interfere
         else:
-            plds.append(importlib.import_module("payloads."+p.replace(".py", ''))) #Each payload is imported and treated as a module
+            if ('.py' in p and not '.pyc' in p):
+                plds.append(importlib.import_module("payloads."+p.replace(".py", ''))) #Each payload is imported and treated as a module
     for pl in plds:
         try:
             handler = pl.handler
@@ -163,6 +164,7 @@ def arguments():
     wrapping_group.add_argument('--tag', action='store_true', dest='TAG', help="Wrap payload with basic <script> tags")
     wrapping_group.add_argument('--tag-random', action='store_true', dest='TAG_RANDOM', help="Wrap payload with random <script> tags")
     wrapping_group.add_argument('--polyglot', action='store_true', dest='POLYGLOT', help="Wrap payload with polyglot wrapper")
+    wrapping_group.add_argument('--cookie', action='store_true', dest='COOKIE', help="Use cookie shortener to reduce payload's size and detection probability")
     parser.add_argument('--oneliner', action='store_true', dest='ONELINER', help="Convert generated payload to one-liner")
     parser.add_argument('--bookmarklet', action='store_true', dest='BOOKMARKLET', help="Convert generated payload to a bookmarklet")
     parser.add_argument('--handler', action='store_true', dest='HANDLER', help="Start handler after payload generation")
@@ -232,6 +234,9 @@ def main():
     if res.TAG:
         js_code = f"<script>{js_code}</script>"
     
+    if res.COOKIE:
+        js_code = js_code.replace("document.cookie", "cookie")
+
     if res.TAG_RANDOM: #Just a tag obfuscation (ex. <script> => <ScRiPt>)
         script_tag = "script"
         script_tag = "".join(random.choice([c.upper(), c]) for c in script_tag )
