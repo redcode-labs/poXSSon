@@ -1,0 +1,14 @@
+confirm()
+confirm``
+(confirm``)
+{confirm``}
+[confirm``]
+(((confirm)))``
+co\u006efirm()
+new class extends confirm``{}
+[8].find(confirm)
+[8].map(confirm)
+[8].some(confirm)
+[8].every(confirm)
+[8].filter(confirm)
+[8].findIndex(confirm)
