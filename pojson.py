@@ -163,6 +163,7 @@ def arguments():
     #Separate group for executable wrappers (it just looks more clear imho)
     wrapping_group.add_argument('--tag', action='store_true', dest='TAG', help="Wrap payload with basic <script> tags")
     wrapping_group.add_argument('--tag-random', action='store_true', dest='TAG_RANDOM', help="Wrap payload with random <script> tags")
+    wrapping_group.add_argument('--tag-different', action='store_true', dest='TAG_RANDOM_DIFFERENT', help="When combined with above option, generates different start and end tags")
     wrapping_group.add_argument('--tag-closer', action='store_true', dest='TAG_CLOSER', help="Use '//' instead of '>' for closing tags")
     wrapping_group.add_argument('--polyglot', action='store_true', dest='POLYGLOT', help="Wrap payload with polyglot wrapper")
     wrapping_group.add_argument('--cookie', action='store_true', dest='COOKIE', help="Use cookie shortener to reduce payload's size and detection probability")
@@ -243,7 +244,10 @@ def main():
     if res.TAG_RANDOM: #Just a tag obfuscation (ex. <script> => <ScRiPt>)
         script_tag = "script"
         script_tag = "".join(random.choice([c.upper(), c]) for c in script_tag )
-        js_code = f"<{script_tag}>{js_code}</{script_tag}>"
+        end_tag = script_tag
+        if res.TAG_RANDOM_DIFFERENT:
+            end_tag = "".join(random.choice([c.upper(), c]) for c in script_tag )
+        js_code = f"<{script_tag}>{js_code}</{end_tag}>"
 
     if res.TAG_CLOSER:
         js_code = js_code.replace(">", "//")
