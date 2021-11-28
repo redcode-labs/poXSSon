@@ -147,7 +147,7 @@ def insert_options(payload_code, payload_options, cli_options):
 
 
 def arguments():
-    parser = argparse.ArgumentParser(prog="pojson")
+    parser = argparse.ArgumentParser(prog="poxsson")
     wrapping = parser.add_argument_group()
     wrapping_group = wrapping.add_mutually_exclusive_group()
     parser.add_argument('OPTIONS', nargs="*", help="Specify the payload's options") #nargs means that 0 or mor arguments of this type can be passed
@@ -161,13 +161,13 @@ def arguments():
     parser.add_argument('-d', '--delay', action='store', dest='DELAY', metavar='<n[s|m|h]>', help='Execute payload after specific period of time (seconds, minutes, hours)')
     parser.add_argument('-e', '--encode', action='store', choices=['base64', 'utf8'], dest='ENCODE', metavar='<encoding>', help='Encode payload')
     #Separate group for executable wrappers (it just looks more clear imho)
-    wrapping_group.add_argument('--tag', action='store_true', dest='TAG', help="Wrap payload with basic <script> tags")
-    wrapping_group.add_argument('--tag-random', action='store_true', dest='TAG_RANDOM', help="Wrap payload with random <script> tags")
-    wrapping_group.add_argument('--tag-different', action='store_true', dest='TAG_RANDOM_DIFFERENT', help="When combined with above option, generates different start and end tags")
-    wrapping_group.add_argument('--tag-closer', action='store_true', dest='TAG_CLOSER', help="Use '//' instead of '>' for closing tags")
-    wrapping_group.add_argument('--polyglot', action='store_true', dest='POLYGLOT', help="Wrap payload with polyglot wrapper")
-    wrapping_group.add_argument('--cookie', action='store_true', dest='COOKIE', help="Use cookie shortener to reduce payload's size and detection probability")
-    wrapping_group.add_argument('--confirm', action='store_true', dest='CONFIRM', help="Replace alert() popups with less detectable confirm()")
+    parser.add_argument('--tag', action='store_true', dest='TAG', help="Wrap payload with basic <script> tags")
+    parser.add_argument('--tag-random', action='store_true', dest='TAG_RANDOM', help="Wrap payload with random <script> tags")
+    parser.add_argument('--tag-different', action='store_true', dest='TAG_RANDOM_DIFFERENT', help="When combined with above option, generates different start and end tags")
+    parser.add_argument('--tag-closer', action='store_true', dest='TAG_CLOSER', help="Use '//' instead of '>' for closing tags")
+    parser.add_argument('--polyglot', action='store_true', dest='POLYGLOT', help="Wrap payload with polyglot wrapper")
+    parser.add_argument('--cookie', action='store_true', dest='COOKIE', help="Use cookie shortener to reduce payload's size and detection probability")
+    parser.add_argument('--confirm', action='store_true', dest='CONFIRM', help="Replace alert() popups with less detectable confirm()")
     parser.add_argument('--oneliner', action='store_true', dest='ONELINER', help="Convert generated payload to one-liner")
     parser.add_argument('--bookmarklet', action='store_true', dest='BOOKMARKLET', help="Convert generated payload to a bookmarklet")
     parser.add_argument('--handler', action='store_true', dest='HANDLER', help="Start handler after payload generation")
