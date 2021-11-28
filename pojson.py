@@ -172,6 +172,7 @@ def arguments():
     parser.add_argument('--oneliner', action='store_true', dest='ONELINER', help="Convert generated payload to one-liner")
     parser.add_argument('--bookmarklet', action='store_true', dest='BOOKMARKLET', help="Convert generated payload to a bookmarklet")
     parser.add_argument('--handler', action='store_true', dest='HANDLER', help="Start handler after payload generation")
+    parser.add_argument('--jquery', action='store_true', dest='JQUERY', help="Load JQuery before running the payload")
     parser.add_argument('--replace-http', action='store_true', dest='REPLACE_HTTP', help="Replace 'http[s]://' with a random substitute")
     #parser.add_argument('--replacei-chars', action='store', choices=['html', 'octal', 'url', 'iso', 'hex', 'numeric'], dest='REPLACE', 
     #                    help="Replace all special characters with their equivalents of selected type")
@@ -202,7 +203,8 @@ def main():
         js_code = f"""setTimeout(function() {
             {js_code}
         }, {delay_in_miliseconds})""" #Our payload is embeded inside "setTimeout". The timeout itself is expanded from interval to miliseconds
-
+    if res.JQUERY:
+        js_code = f"<script src=//cdn-url></script>\n{js_code}"
     if res.INFO:
         print_payload_info(loaded_payload)
         sys.exit() #Shows details and exits
