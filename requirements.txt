@@ -1,3 +1,4 @@
 huepy
 pyperclip
 terminaltables
+beautifulsoup4
